@@ -1,33 +1,29 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { Event } from './events/event.entity';
-import { EventsController } from './events/events.controller';
-import { EventsModule } from './events/events.module';
-import { ConfigModule } from '@nestjs/config';
-import { AppJapanService } from './app.japan.service';
+import { User } from './user/user.entity';
+import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
-      type: 'mysql',
+      type: 'postgres',
       host: '127.0.0.1',
-      port: 3306,
-      username: 'root',
+      port: 5432,
+      username: 'postgres',
       password: 'example',
-      database: 'nest-events',
-      entities: [Event],
-      synchronize: true
+      database: 'flashcards',
+      entities: [User],
+      synchronize: true,
     }),
-    TypeOrmModule.forFeature([Event]),
-    EventsModule
+    UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
-  providers: [{
-    provide: AppService,
-    useClass: AppJapanService
-  }],
+  providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

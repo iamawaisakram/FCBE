@@ -34,11 +34,14 @@ export class EventsController {
     });
   }
 
-  @Get(':id')
-  async findOne(@Param('id', ParseIntPipe) id: number) {
-    // console.log(typeof id);
-    return await this.repository.findOne(id);
-  }
+ @Get(':id')
+async findOne(@Param('id', ParseIntPipe) id: number) {
+  const event = await this.repository.findOne({ where: { id: id } });
+
+
+
+  return event;
+}
 
   // You can also use the @UsePipes decorator to enable pipes.
   // It can be done per method, or for every method when you
