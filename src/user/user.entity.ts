@@ -1,10 +1,15 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-// import { Space } from '../spaces/space.entity';
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
-export class User {
+class User {
   @PrimaryGeneratedColumn()
-  userID: number;
+  id: number;
+
+
 
   @Column({ unique: true })
   email: string;
@@ -12,9 +17,6 @@ export class User {
   @Column()
   password: string;
 
-  @Column({ default: () => 'CURRENT_TIMESTAMP' })
-  created_at: Date;
-
-  // @OneToMany(() => Space, (space) => space.user)
-  // spaces: Space[];
 }
+
+export default User;
