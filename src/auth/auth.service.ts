@@ -36,24 +36,28 @@ export class AuthService {
   }
 
   async login(loginDto: LoginDto): Promise<{ token: string }> {
-    const { email, password } = loginDto;
+  console.log('Received login request:', loginDto);
 
-    const user = await this.usersRepository.findOne({
-      where: { email },
-    });
+  const { email, password } = loginDto;
 
-    if (!user) {
-      throw new UnauthorizedException('Invalid email or password');
-    }
+  const user = await this.usersRepository.findOne({
+    where: { email },
+  });
 
-    const isPasswordMatched = await bcrypt.compare(password, user.password);
-
-    if (!isPasswordMatched) {
-      throw new UnauthorizedException('Invalid email or password');
-    }
-
-    const token = this.jwtService.sign({ id: user.id });
-
-    return { token };
+  if (!user) {
+    throw new UnauthorizedException('Invalid email or password');
   }
+
+  const isPasswordMatched = await bcrypt.compare(password, user.password);
+
+  if (!isPasswordMatched) {
+    throw new UnauthorizedException('Invalid email or password');
+  }
+
+  const token = this.jwtService.sign({ id: user.id });
+  console.log('Login successful! Token:', token);
+
+  return { token };
+}
+
 }
