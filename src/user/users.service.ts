@@ -11,7 +11,7 @@ export class UsersService {
   ) {}
 
   async getAllUsers() {
-    const users = this.usersRepository.find();
+    const users = await this.usersRepository.find();
     return users;
   }
 
@@ -28,12 +28,16 @@ export class UsersService {
   }
 
   async createUser(createUserDto: CreateUserDto) {
-    const newUser = await this.usersRepository.create(createUserDto);
-    await this.usersRepository.save({
-      name: createUserDto.name,
-      email: createUserDto.email,
-      password: createUserDto.password,
-    });
+    const newUser = this.usersRepository.create(createUserDto);
+
+    // Setting created_at and updated_at
+    const currentDate = new Date();
+    newUser.created_at = currentDate.toLocaleString('en-GB', { timeZone: 'UTC' });
+    newUser.updated_at = currentDate.toLocaleString('en-GB', { timeZone: 'UTC' });
+
+    // Saving the new user entity
+    await this.usersRepository.save(newUser);
+
     return newUser;
   }
 
