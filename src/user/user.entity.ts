@@ -22,6 +22,7 @@ class User {
 
   @UpdateDateColumn({ type: 'varchar', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
   updated_at: string;
+    spaces: any;
 }
 
 export default User;
