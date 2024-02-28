@@ -16,5 +16,6 @@ export class Space {
   updatedAt: Date;
 
   @OneToMany(() => UserSpace, (userSpace) => userSpace.space)
-  users: UserSpace[];
+  userSpaces: UserSpace[];
+  users: any;
 }
