@@ -1,33 +1,33 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { Event } from './events/event.entity';
-import { EventsController } from './events/events.controller';
-import { EventsModule } from './events/events.module';
-import { ConfigModule } from '@nestjs/config';
-import { AppJapanService } from './app.japan.service';
+import * as Joi from '@hapi/joi';
+import { DatabaseModule } from './database/database.module';
+import { UsersModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
+import { SpaceModule } from './space/space.module';
+import { DeckModule } from './decks/deck.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: '127.0.0.1',
-      port: 3306,
-      username: 'root',
-      password: 'example',
-      database: 'nest-events',
-      entities: [Event],
-      synchronize: true
+    ConfigModule.forRoot({
+      validationSchema: Joi.object({
+        POSTGRES_HOST: Joi.string().required(),
+        POSTGRES_PORT: Joi.number().required(),
+        POSTGRES_USER: Joi.string().required(),
+        POSTGRES_PASSWORD: Joi.string().required(),
+        POSTGRES_DB: Joi.string().required(),
+        PORT: Joi.number(),
+      }),
     }),
-    TypeOrmModule.forFeature([Event]),
-    EventsModule
+    DatabaseModule,
+    UsersModule,
+    AuthModule,
+    SpaceModule,
+    DeckModule,
   ],
   controllers: [AppController],
-  providers: [{
-    provide: AppService,
-    useClass: AppJapanService
-  }],
+  providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}
