@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 import { UserSpace } from './user-space.entity';
-
+import { UserSpaceDeck } from 'src/decks/user-space-deck.entity';
 @Entity('space')
 export class Space {
   @PrimaryGeneratedColumn()
@@ -18,4 +18,7 @@ export class Space {
   @OneToMany(() => UserSpace, (userSpace) => userSpace.space)
   userSpaces: UserSpace[];
   users: any;
+
+  @OneToMany(() => UserSpaceDeck, (userSpaceDeck) => userSpaceDeck.space)
+  userSpacesDecks: UserSpaceDeck[];
 }

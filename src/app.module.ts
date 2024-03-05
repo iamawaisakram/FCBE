@@ -7,6 +7,7 @@ import { DatabaseModule } from './database/database.module';
 import { UsersModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { SpaceModule } from './space/space.module';
+import { DeckModule } from './decks/deck.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { SpaceModule } from './space/space.module';
     UsersModule,
     AuthModule,
     SpaceModule,
+    DeckModule,
   ],
   controllers: [AppController],
   providers: [AppService],
