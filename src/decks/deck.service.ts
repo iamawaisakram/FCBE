@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Deck } from './deck.entity';
@@ -16,8 +16,6 @@ export class DeckService {
   ) {}
 
   async createDeck(name: string, user: User, space: Space): Promise<Deck> {
-
-
     // Creating a new deck
     const deck = this.deckRepository.create({ name });
     const savedDeck = await this.deckRepository.save(deck);
@@ -26,13 +24,77 @@ export class DeckService {
     const userSpaceDeck = this.userSpaceDeckRepository.create({
       user,
       deck: savedDeck,
+      space,
     });
-
-    // Setting the space property explicitly
-    userSpaceDeck.space = space;
 
     await this.userSpaceDeckRepository.save(userSpaceDeck);
 
     return savedDeck;
   }
+
+  async getAllDecks(user: User): Promise<Deck[]> {
+  const userSpaceDecks = await this.userSpaceDeckRepository.find({
+    where: { user: { id: user.id } }, // Specify the condition in the 'where' option
+    relations: ['deck'], // Specify relations to eager load
+  });
+
+  return userSpaceDecks.map((usd) => usd.deck);
+}
+
+
+ async getDeckById(id: string, user: User): Promise<Deck> {
+  const userSpaceDeck = await this.userSpaceDeckRepository.findOne({
+    where: {
+      user: { id: user.id },
+      deck: { id: parseInt(id, 10) }, // Convert id to number
+    },
+    relations: ['deck'],
+  });
+
+  if (!userSpaceDeck) {
+    throw new NotFoundException('Deck not found.');
+  }
+
+  return userSpaceDeck.deck;
+}
+
+
+
+  async updateDeck(id: string, name: string, user: User): Promise<Deck> {
+  const userSpaceDeck = await this.userSpaceDeckRepository.findOne({
+    where: {
+      user: { id: user.id },
+     deck: { id: parseInt(id, 10) },
+    },
+    relations: ['deck'],
+  });
+
+  if (!userSpaceDeck) {
+    throw new NotFoundException('Deck not found.');
+  }
+
+  userSpaceDeck.deck.name = name;
+  await this.deckRepository.save(userSpaceDeck.deck);
+
+  return userSpaceDeck.deck;
+}
+
+
+  async deleteDeck(id: string, user: User): Promise<void> {
+  const userSpaceDeck = await this.userSpaceDeckRepository.findOne({
+    where: {
+      user: { id: user.id },
+      deck: { id: parseInt(id, 10) },
+    },
+    relations: ['deck'],
+  });
+
+  if (!userSpaceDeck) {
+    throw new NotFoundException('Deck not found.');
+  }
+
+  await this.userSpaceDeckRepository.remove(userSpaceDeck);
+  await this.deckRepository.remove(userSpaceDeck.deck);
+}
+
 }

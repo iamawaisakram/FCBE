@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseGuards, Request } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Request, Get, Param, Delete, Put } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { DeckService } from './deck.service';
 import { Deck } from './deck.entity';
@@ -10,20 +10,40 @@ import { Space } from 'src/space/space.entity';
 export class DeckController {
   constructor(private readonly deckService: DeckService) {}
 
-@Post()
-async createDeck(
-  @Body('name') name: string,
-  @Request() req: { user: User, body: { space: Space } }, // Extract space from req.body
-): Promise<Deck> {
-  const { user, body: { space } } = req;
+  @Post()
+  async createDeck(
+    @Body('name') name: string,
+    @Request() req: { user: User, body: { space: Space } },
+  ): Promise<Deck> {
+    const { user, body: { space } } = req;
+    return this.deckService.createDeck(name, user, space);
+  }
 
-  // Check if space is defined before calling createDeck
-  // if (!space) {
-  //   console.error('Space is undefined in the request', req);
-  //   throw new Error('Space is undefined in the request');
-  // }
+  @Get()
+  async getAllDecks(@Request() req: { user: User }): Promise<Deck[]> {
+    const { user } = req;
+    return this.deckService.getAllDecks(user);
+  }
 
-  return this.deckService.createDeck(name, user, space);
-}
+  @Get(':id')
+  async getDeckById(@Param('id') id: string, @Request() req: { user: User }): Promise<Deck> {
+    const { user } = req;
+    return this.deckService.getDeckById(id, user);
+  }
 
+  @Put(':id')
+  async updateDeck(
+    @Param('id') id: string,
+    @Body('name') name: string,
+    @Request() req: { user: User },
+  ): Promise<Deck> {
+    const { user } = req;
+    return this.deckService.updateDeck(id, name, user);
+  }
+
+  @Delete(':id')
+  async deleteDeck(@Param('id') id: string, @Request() req: { user: User }): Promise<void> {
+    const { user } = req;
+    return this.deckService.deleteDeck(id, user);
+  }
 }
