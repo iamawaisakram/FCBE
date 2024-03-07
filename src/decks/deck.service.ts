@@ -32,6 +32,17 @@ export class DeckService {
     return savedDeck;
   }
 
+
+async getDecksBySpaceId(spaceId: number): Promise<Deck[]> {
+    const userSpaceDecks = await this.userSpaceDeckRepository.find({
+      where: { space: { id: spaceId } },
+      relations: ['deck'],
+    });
+
+    return userSpaceDecks.map((usd) => usd.deck);
+  }
+
+
   async getAllDecks(user: User): Promise<Deck[]> {
   const userSpaceDecks = await this.userSpaceDeckRepository.find({
     where: { user: { id: user.id } }, // Specify the condition in the 'where' option

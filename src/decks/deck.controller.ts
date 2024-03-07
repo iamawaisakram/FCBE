@@ -19,6 +19,23 @@ export class DeckController {
     return this.deckService.createDeck(name, user, space);
   }
 
+
+  @Get('space/:spaceId')
+  async getDecksBySpaceId(@Param('spaceId') spaceId: number): Promise<Deck[]> {
+    console.log(`Fetching decks for spaceId: ${spaceId}`);
+    try {
+      const decks = await this.deckService.getDecksBySpaceId(spaceId);
+      // console.log('Fetched decks:', decks);
+      return decks;
+    } catch (error) {
+      // console.error('Error fetching decks:', error);
+      throw error;
+    }
+  }
+
+
+
+
   @Get()
   async getAllDecks(@Request() req: { user: User }): Promise<Deck[]> {
     const { user } = req;
