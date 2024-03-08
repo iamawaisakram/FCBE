@@ -8,6 +8,7 @@ import { UsersModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { SpaceModule } from './space/space.module';
 import { DeckModule } from './decks/deck.module';
+import { CardModule } from './card/card.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { DeckModule } from './decks/deck.module';
     AuthModule,
     SpaceModule,
     DeckModule,
+    CardModule,
   ],
   controllers: [AppController],
   providers: [AppService],

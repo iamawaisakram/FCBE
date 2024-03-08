@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { UserSpaceDeckCard } from 'src/card/user-space-deck-card.entity';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 
 @Entity()
 export class Deck {
@@ -13,4 +14,7 @@ export class Deck {
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  @OneToMany(() => UserSpaceDeckCard, userSpaceDeckCard => userSpaceDeckCard.deck)
+  userSpaceDeckCards: UserSpaceDeckCard[];
 }
