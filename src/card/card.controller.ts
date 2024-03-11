@@ -4,6 +4,8 @@ import { CardService } from './card.service';
 import { Card } from './card.entity';
 import User from 'src/user/user.entity';
 import { Space } from 'src/space/space.entity';
+import { Answer } from './answer.entity';
+import { Clue } from './clue.entity';
 
 @Controller('cards')
 @UseGuards(AuthGuard('jwt'))
@@ -13,11 +15,11 @@ export class CardController {
   @Post(':deckId')
   async createCardInDeck(
     @Param('deckId') deckId: string, // 'deckId' is of type string
-    @Body('name') cardName: string,
-    @Request() req: { user: User, body: { space: Space } },
+    @Body() cardData: { name: string, space: Space, answers?: Answer[], clues?: Clue[] },
+    @Request() req: { user: User },
   ): Promise<Card> {
-    const { user, body: { space } } = req;
-    return this.cardService.createCardInDeck(+deckId, cardName, user, space); // Converting 'deckId' to number
+    const { user } = req;
+    return this.cardService.createCardInDeck(+deckId, { ...cardData, user }); // Converting 'deckId' to number
   }
 
   @Get(':deckId')
