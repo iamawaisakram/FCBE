@@ -64,9 +64,9 @@ export class CardService {
   async getCardsInDeck(deckId: string): Promise<Card[]> {
     const userSpaceDeckCards = await this.userSpaceDeckCardRepository.find({
       where: { deck: { id: +deckId } },
-      relations: ['card'],
+      relations: ['card', 'card.answers', 'card.clues'], // Include related answers and clues
     });
 
     return userSpaceDeckCards.map((usdc) => usdc.card);
-  }
+}
 }
