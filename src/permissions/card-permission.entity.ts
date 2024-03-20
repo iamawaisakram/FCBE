@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Card } from 'src/card/card.entity';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 
 @Entity()
 export class CardPermission {
@@ -40,4 +41,7 @@ export class CardPermission {
 
   @Column()
   show_clue: boolean;
+
+  @ManyToOne(() => Card, card => card.permissions)
+  card: Card;
 }

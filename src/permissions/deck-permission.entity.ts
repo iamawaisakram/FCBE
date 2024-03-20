@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Deck } from 'src/decks/deck.entity';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 
 @Entity()
 export class DeckPermission {
@@ -31,4 +32,7 @@ export class DeckPermission {
 
   @Column()
   show_space: boolean;
+
+  @ManyToOne(() => Deck, deck => deck.permissions)
+  deck: Deck;
 }

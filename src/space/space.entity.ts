@@ -21,4 +21,6 @@ export class Space {
 
   @OneToMany(() => UserSpaceDeck, (userSpaceDeck) => userSpaceDeck.space)
   userSpacesDecks: UserSpaceDeck[];
+    ownerId: number;
+    permissions: any;
 }

@@ -21,4 +21,6 @@ export class Card {
 
   @OneToMany(() => Clue, (clue) => clue.card)
   clues: Clue[];
+    ownerId: number;
+    permissions: any;
 }

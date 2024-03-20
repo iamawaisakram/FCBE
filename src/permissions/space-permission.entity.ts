@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Space } from 'src/space/space.entity';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 
 @Entity()
 export class SpacePermission {
@@ -25,4 +26,6 @@ export class SpacePermission {
 
   @Column()
   can_create: boolean;
+  @ManyToOne(() => Space, space => space.permissions)
+  space: Space;
 }

@@ -17,4 +17,6 @@ export class Deck {
 
   @OneToMany(() => UserSpaceDeckCard, userSpaceDeckCard => userSpaceDeckCard.deck)
   userSpaceDeckCards: UserSpaceDeckCard[];
+    ownerId: number;
+    permissions: any;
 }
